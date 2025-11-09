@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="main-container">
   <div class="icon-box">
     <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
@@ -14,8 +16,13 @@
   </p>
 
   <div class="buttons">
-    <button class="btn-primary" aria-label="Get Started" onclick="window.location.href='/requests'">Get Started</button>
-    <button class="btn-secondary" aria-label="Sign In" onclick="window.location.href='/login'">Sign In</button>
+    <button class="btn-primary" aria-label="Get Started" onclick="window.location.href='{% url 'requests' %}'">Get Started</button>
+    
+    {% if not user.is_authenticated %}
+      <button class="btn-secondary" aria-label="Sign In" onclick="window.location.href='{% url 'login' %}'">Sign In</button>
+    {% else %}
+      <button class="btn-secondary" aria-label="Profile" onclick="window.location.href='{% url 'profile' %}'">My Profile</button>
+    {% endif %}
   </div>
 
   <div class="stats">

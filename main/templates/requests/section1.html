@@ -1,9 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
 <section class="requests-section">
   <div class="requests-header">
     <div class="header-text">
       <h1>Help Requests</h1>
-      <p>0 people need your help</p>
+
+      <!-- ✅ Dynamic Request Count -->
+      {% if requests %}
+        <p>
+          <span class="request-count">{{ requests|length }}</span>
+          {% if requests|length == 1 %}person needs{% else %}people need{% endif %} your help
+        </p>
+      {% else %}
+        <p>No active requests right now</p>
+      {% endif %}
     </div>
+
+    <!-- ✅ Add Request Button -->
     <button class="add-request-btn" onclick="openAddRequest()">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
         <path d="M3.33337 8H12.6667" stroke="white" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"/>
@@ -12,31 +27,9 @@
       <span>Add Request</span>
     </button>
   </div>
-
-  <!-- Category Filter -->
-  <div class="category-filter">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path d="M6.66667 13.3333C6.66661 13.4572 6.70107 13.5787 6.76619 13.6841C6.83131 13.7895 6.92451 13.8746 7.03533 13.93L8.36867 14.5967C8.47033 14.6475 8.58329 14.6714 8.69683 14.6663C8.81036 14.6612 8.9207 14.6271 9.01735 14.5673C9.11401 14.5075 9.19378 14.424 9.24908 14.3247C9.30438 14.2254 9.33339 14.1137 9.33333 14V9.33333C9.33348 9.00292 9.45631 8.68433 9.678 8.43933L14.4933 3.11333C14.5796 3.01771 14.6364 2.89912 14.6567 2.77192C14.6771 2.64472 14.6601 2.51435 14.6079 2.39658C14.5557 2.27881 14.4706 2.17868 14.3627 2.1083C14.2548 2.03792 14.1288 2.0003 14 2H2C1.87107 2.00005 1.74492 2.03748 1.63683 2.10776C1.52874 2.17804 1.44335 2.27815 1.391 2.39598C1.33865 2.5138 1.32159 2.64427 1.34188 2.77159C1.36217 2.89892 1.41895 3.01762 1.50533 3.11333L6.322 8.43933C6.54369 8.68433 6.66652 9.00292 6.66667 9.33333V13.3333Z" stroke="#6A7282" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-
-    <div class="badges">
-      <span class="badge active">All</span>
-      <span class="badge">Loneliness</span>
-      <span class="badge">Stress Handling</span>
-      <span class="badge">Communication</span>
-      <span class="badge">Weight Lifting</span>
-      <span class="badge">Ride Sharing</span>
-      <span class="badge">Electrical</span>
-      <span class="badge">Cleaning</span>
-      <span class="badge">Pet Care</span>
-      <span class="badge">Tutoring</span>
-      <span class="badge">Shopping</span>
-      <span class="badge">Moving</span>
-    </div>
-  </div>
 </section>
 
-<!-- Add Request Modal -->
+<!-- ✅ Add Request Modal -->
 <div id="addRequestModal" class="add-request-modal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeAddRequest()">×</button>
@@ -70,6 +63,7 @@
   </div>
 </div>
 
+<!-- ✅ Styles -->
 <style>
   .requests-section {
     font-family: "Arimo", sans-serif;
@@ -94,7 +88,7 @@
   .header-text h1 {
     color: #101828;
     font-size: 1.5rem;
-    font-weight: 400;
+    font-weight: 500;
     margin: 0;
   }
 
@@ -104,74 +98,30 @@
     margin: 0.25rem 0 0 0;
   }
 
+  .request-count {
+    font-weight: 700;
+    color: #FF2056;
+    font-size: 1.1rem;
+    margin-right: 0.25rem;
+  }
+
   .add-request-btn {
     background: linear-gradient(90deg, #FF2056 0%, #FF6900 100%);
     color: white;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1rem;
     border-radius: 8px;
     border: none;
     box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
   }
 
   .add-request-btn:hover {
     transform: translateY(-2px);
-    filter: brightness(1.05);
-  }
-
-  /* Category Filter */
-  .category-filter {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  .badge {
-    font-size: 0.75rem;
-    padding: 2px 8px;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: #0A0A0A;
-    background: white;
-    cursor: pointer;
-    transition: all 0.25s ease;
-  }
-
-  .badge:hover {
-    background: rgba(255, 105, 0, 0.08);
-    border-color: rgba(255, 105, 0, 0.3);
-  }
-
-  .badge.active {
-    background: linear-gradient(90deg, #FF2056 0%, #FF6900 100%);
-    color: white;
-    border: none;
-    box-shadow: 0 3px 6px -2px rgba(255, 32, 86, 0.3);
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .requests-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .add-request-btn {
-      width: 100%;
-      justify-content: center;
-    }
+    filter: brightness(1.1);
   }
 
   /* Modal Styling */
@@ -217,7 +167,7 @@
     right: 1rem;
     background: none;
     border: none;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     cursor: pointer;
     color: #666;
   }
@@ -275,13 +225,43 @@
   .submit-btn:hover {
     filter: brightness(1.05);
   }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .requests-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .add-request-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 </style>
 
+<!-- ✅ Script -->
 <script>
   function openAddRequest() {
     document.getElementById('addRequestModal').classList.add('active');
   }
+
   function closeAddRequest() {
     document.getElementById('addRequestModal').classList.remove('active');
   }
+
+  // ✅ Optional Count Animation
+  document.addEventListener('DOMContentLoaded', () => {
+    const countEl = document.querySelector('.request-count');
+    if (countEl) {
+      const target = parseInt(countEl.textContent);
+      let count = 0;
+      const interval = setInterval(() => {
+        count++;
+        countEl.textContent = count;
+        if (count >= target) clearInterval(interval);
+      }, 50);
+    }
+  });
 </script>
+{% endblock %}

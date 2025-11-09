@@ -12,22 +12,40 @@
     <!-- AOS for animations -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Interactivity Animations -->
+    <style>
+      .clickable {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+      }
+      .clickable:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+      }
+      .active-card {
+        border: 2px solid #fb7185;
+        box-shadow: 0 0 12px rgba(251, 113, 133, 0.4);
+      }
+    </style>
   </head>
 
   <body class="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-purple-50 pt-24 pb-12 px-4">
     <div class="container mx-auto max-w-6xl">
 
       <!-- Profile Header -->
-      <div data-aos="fade-up" class="p-8 mb-8 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-sm">
+      <div data-aos="fade-up"
+        class="p-8 mb-8 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-sm">
         <div class="flex flex-col md:flex-row gap-6 items-center md:items-start">
           <div class="flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1558616513-9c9db87e1245?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400" alt="Avatar"
-                 class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
+            <img src="https://images.unsplash.com/photo-1558616513-9c9db87e1245?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400"
+              alt="Avatar" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
           </div>
           <div class="flex-1 text-center md:text-left">
             <h1 class="text-gray-900 text-2xl font-semibold mb-2">Sujit Hiwale</h1>
             <div class="flex flex-wrap gap-2 justify-center md:justify-start mb-3">
-              <span class="bg-gradient-to-r from-rose-500 to-orange-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
+              <span
+                class="bg-gradient-to-r from-rose-500 to-orange-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
                 ⭐ Top Helper
               </span>
               <span class="border border-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full">
@@ -36,9 +54,10 @@
             </div>
             <p class="text-gray-600 mb-3">Passionate about helping my community thrive. Every small act counts!</p>
             <div class="flex items-center gap-2 text-sm text-gray-500 justify-center md:justify-start">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span>Joined January 2024</span>
             </div>
@@ -49,7 +68,7 @@
       <!-- Stats -->
       <div data-aos="fade-up" data-aos-delay="100" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {% for label, value, color, icon in stats %}
-        <div class="p-6 text-center bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition">
+        <div onclick="activateCard(this)" class="clickable p-6 text-center bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition">
           <div class="{{ color }} mb-2 text-3xl">{{ icon }}</div>
           <div class="text-gray-900 text-xl font-semibold mb-1">{{ value }}</div>
           <p class="text-sm text-gray-600">{{ label }}</p>
@@ -63,7 +82,7 @@
           <h2 class="text-gray-900 text-xl font-semibold mb-6">Help Categories</h2>
           <div class="space-y-4">
             {% for cat in category_progress %}
-            <div>
+            <div onclick="activateCategory(this)" class="clickable p-2 rounded-lg hover:bg-rose-50 transition">
               <div class="flex items-center gap-3 mb-2">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-br {{ cat.color }} flex items-center justify-center text-lg">
                   {{ cat.icon }}
@@ -88,7 +107,8 @@
           <h2 class="text-gray-900 text-xl font-semibold mb-6">Recent Activity</h2>
           <div class="space-y-4">
             {% for activity in recent_activity %}
-            <div class="flex items-start gap-3 pb-4 border-b border-gray-100 last:border-0">
+            <div onclick="alert('Viewing details for {{ activity.person }}')" 
+                 class="clickable flex items-start gap-3 pb-4 border-b border-gray-100 last:border-0">
               <div class="w-10 h-10 bg-gradient-to-br from-rose-500 to-orange-500 rounded-full flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -114,7 +134,8 @@
         <h2 class="text-gray-900 text-xl font-semibold mb-6">Achievements</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
           {% for a in achievements %}
-          <div class="p-4 rounded-2xl text-center border-2 transition-all
+          <div onclick="activateAchievement(this)"
+            class="clickable p-4 rounded-2xl text-center border-2 transition-all
                       {% if a.unlocked %}
                         border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50 shadow-md
                       {% else %}
@@ -134,29 +155,38 @@
       </div>
 
       <!-- Quote -->
-      <div data-aos="fade-up" data-aos-delay="300" class="mt-8 p-8 bg-gradient-to-br from-rose-500 to-orange-500 text-white rounded-2xl shadow-lg relative overflow-hidden">
+      <div data-aos="fade-up" data-aos-delay="300"
+        class="mt-8 p-8 bg-gradient-to-br from-rose-500 to-orange-500 text-white rounded-2xl shadow-lg relative overflow-hidden">
         <div class="relative z-10">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mb-4" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z" />
+              d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z" />
           </svg>
           <blockquote class="text-xl italic mb-4">
-            "The purpose of life is not to be happy. It is to be useful, to be honorable, to be compassionate, to have it make some difference that you have lived and lived well."
+            "The purpose of life is not to be happy. It is to be useful, to be honorable, to be compassionate,
+            to have it make some difference that you have lived and lived well."
           </blockquote>
           <p>— Ralph Waldo Emerson</p>
         </div>
-        <div class="absolute -bottom-8 -right-8 opacity-10">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-64 h-64" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z" />
-          </svg>
-        </div>
       </div>
-
     </div>
 
     <script>
       AOS.init({ duration: 800, once: true });
+
+      function activateCard(el) {
+        document.querySelectorAll('.clickable').forEach(c => c.classList.remove('active-card'));
+        el.classList.add('active-card');
+      }
+
+      function activateCategory(el) {
+        el.classList.toggle('active-card');
+      }
+
+      function activateAchievement(el) {
+        el.classList.toggle('active-card');
+        alert('Achievement details opened!');
+      }
     </script>
   </body>
 </html>

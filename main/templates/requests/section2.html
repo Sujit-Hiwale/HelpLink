@@ -1,69 +1,103 @@
 <!-- Requests Grid Section -->
 <section class="requests-grid-section">
+  <!-- Category Filter Buttons -->
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterRequests('all')">All</button>
+    <button class="filter-btn" onclick="filterRequests('Loneliness')">🤝 Loneliness</button>
+    <button class="filter-btn" onclick="filterRequests('Stress Handling')">🧘 Stress</button>
+    <button class="filter-btn" onclick="filterRequests('Communication')">💬 Communication</button>
+    <button class="filter-btn" onclick="filterRequests('Weight Lifting')">💪 Weight Lifting</button>
+    <button class="filter-btn" onclick="filterRequests('Ride Sharing')">🚗 Ride Sharing</button>
+    <button class="filter-btn" onclick="filterRequests('Electrical')">⚡ Electrical</button>
+    <button class="filter-btn" onclick="filterRequests('Cleaning')">🧹 Cleaning</button>
+    <button class="filter-btn" onclick="filterRequests('Pet Care')">🐕 Pet Care</button>
+    <button class="filter-btn" onclick="filterRequests('Tutoring')">📚 Tutoring</button>
+    <button class="filter-btn" onclick="filterRequests('Shopping')">🛒 Shopping</button>
+    <button class="filter-btn" onclick="filterRequests('Moving')">📦 Moving</button>
+  </div>
+
   {% if requests %}
-    <div class="requests-grid">
-      {% for request in requests %}
-      <div class="request-card">
-        <!-- Header -->
-        <div class="request-header">
-          <div class="avatar">{{ request.requester.initials }}</div>
-          <div class="request-info">
-            <h3 class="request-title">{{ request.title }}</h3>
-            <p class="request-name">{{ request.requester.name }}</p>
-          </div>
-          <div class="request-icon">
-            {% if request.category == "Loneliness" %}🤝
-            {% elif request.category == "Stress Handling" %}🧘
-            {% elif request.category == "Communication" %}💬
-            {% elif request.category == "Weight Lifting" %}💪
-            {% elif request.category == "Ride Sharing" %}🚗
-            {% elif request.category == "Electrical" %}⚡
-            {% elif request.category == "Cleaning" %}🧹
-            {% elif request.category == "Pet Care" %}🐕
-            {% elif request.category == "Tutoring" %}📚
-            {% elif request.category == "Shopping" %}🛒
-            {% elif request.category == "Moving" %}📦
-            {% else %}🤝{% endif %}
-          </div>
+  <div class="requests-grid">
+    {% for request in requests %}
+    <div class="request-card" data-category="{{ request.category }}">
+      <!-- Header -->
+      <div class="request-header">
+        <div class="avatar">{{ request.requester.initials }}</div>
+        <div class="request-info">
+          <h3 class="request-title">{{ request.title }}</h3>
+          <p class="request-name">{{ request.requester.name }}</p>
         </div>
-
-        <!-- Description -->
-        <p class="request-description">{{ request.description }}</p>
-
-        <!-- Tags -->
-        <div class="tags">
-          <span class="tag urgency 
-            {% if request.urgency == 'low' %}low
-            {% elif request.urgency == 'medium' %}medium
-            {% elif request.urgency == 'high' %}high{% endif %}">
-            {{ request.urgency|title }} Priority
-          </span>
-          <span class="tag category">{{ request.category }}</span>
+        <div class="request-icon">
+          {% if request.category == "Loneliness" %}🤝
+          {% elif request.category == "Stress Handling" %}🧘
+          {% elif request.category == "Communication" %}💬
+          {% elif request.category == "Weight Lifting" %}💪
+          {% elif request.category == "Ride Sharing" %}🚗
+          {% elif request.category == "Electrical" %}⚡
+          {% elif request.category == "Cleaning" %}🧹
+          {% elif request.category == "Pet Care" %}🐕
+          {% elif request.category == "Tutoring" %}📚
+          {% elif request.category == "Shopping" %}🛒
+          {% elif request.category == "Moving" %}📦
+          {% else %}🤝{% endif %}
         </div>
-
-        <!-- Footer -->
-        <div class="request-footer">
-          <span>📍 {{ request.location }}</span>
-          <span>🕒 {{ request.timeAgo }}</span>
-        </div>
-
-        <!-- Button -->
-        <button class="help-btn">❤️ I Can Help</button>
       </div>
-      {% endfor %}
+
+      <!-- Description -->
+      <p class="request-description">{{ request.description }}</p>
+
+      <!-- Tags -->
+      <div class="tags">
+        <span class="tag urgency 
+          {% if request.urgency == 'low' %}low
+          {% elif request.urgency == 'medium' %}medium
+          {% elif request.urgency == 'high' %}high{% endif %}">
+          {{ request.urgency|title }} Priority
+        </span>
+        <span class="tag category">{{ request.category }}</span>
+      </div>
+
+      <!-- Footer -->
+      <div class="request-footer">
+        <span>📍 {{ request.location }}</span>
+        <span>🕒 {{ request.timeAgo }}</span>
+      </div>
+
+      <!-- Button -->
+      <button class="help-btn">❤️ I Can Help</button>
     </div>
+    {% endfor %}
+  </div>
   {% else %}
-    <div class="empty-state">
-      <p>No requests found in this category</p>
-      <button class="view-all-btn" onclick="window.location.href='{{ request.path }}'">
-        View All Requests
-      </button>
-    </div>
+  <div class="empty-state">
+    <p>No requests found in this category</p>
+  </div>
   {% endif %}
 </section>
 
+<!-- JavaScript for Filters -->
+<script>
+  function filterRequests(category) {
+    const cards = document.querySelectorAll('.request-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    // Update active state of buttons
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    // Filter cards
+    cards.forEach(card => {
+      if (category === 'all' || card.dataset.category === category) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+
 <style>
-  /* --- Request Cards Grid --- */
+  /* --- Requests Section --- */
   .requests-grid-section {
     width: 100%;
     padding: 2rem 1rem 4rem;
@@ -71,6 +105,36 @@
     margin: auto;
   }
 
+  /* --- Filter Bar --- */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+  }
+
+  .filter-btn {
+    border: 1px solid #ff6900;
+    color: #ff6900;
+    background: #fff;
+    border-radius: 25px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: linear-gradient(90deg, #FF2056, #FF6900);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 10px rgba(255, 105, 0, 0.3);
+  }
+
+  /* --- Grid Layout --- */
   .requests-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -95,7 +159,6 @@
     box-shadow: 0 8px 20px rgba(255,105,0,0.15);
   }
 
-  /* --- Header --- */
   .request-header {
     display: flex;
     align-items: center;
@@ -114,11 +177,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .request-info {
-    flex: 1;
   }
 
   .request-title {
@@ -128,59 +186,23 @@
     margin: 0;
   }
 
-  .request-name {
-    font-size: 0.875rem;
-    color: #667085;
-    margin: 0.25rem 0 0 0;
-  }
-
-  .request-icon {
-    font-size: 1.5rem;
-  }
-
-  /* --- Description --- */
   .request-description {
     color: #364153;
     font-size: 0.95rem;
     line-height: 1.5;
-    flex-grow: 1;
   }
 
-  /* --- Tags --- */
   .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
   }
 
-  .tag {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    border: 1px solid transparent;
-  }
+  .tag.urgency.low { background: #DBEAFE; color: #1E3A8A; }
+  .tag.urgency.medium { background: #FEF3C7; color: #92400E; }
+  .tag.urgency.high { background: #FEE2E2; color: #B91C1C; }
+  .tag.category { background: #F3F4F6; color: #374151; }
 
-  .tag.urgency.low {
-    background: #DBEAFE;
-    color: #1E3A8A;
-  }
-
-  .tag.urgency.medium {
-    background: #FEF3C7;
-    color: #92400E;
-  }
-
-  .tag.urgency.high {
-    background: #FEE2E2;
-    color: #B91C1C;
-  }
-
-  .tag.category {
-    background: #F3F4F6;
-    color: #374151;
-  }
-
-  /* --- Footer --- */
   .request-footer {
     display: flex;
     justify-content: space-between;
@@ -188,7 +210,6 @@
     font-size: 0.85rem;
   }
 
-  /* --- Button --- */
   .help-btn {
     background: linear-gradient(90deg, #FF2056 0%, #FF6900 100%);
     color: white;
@@ -201,29 +222,11 @@
     transition: all 0.2s ease;
   }
 
-  .help-btn:hover {
-    filter: brightness(1.1);
-  }
+  .help-btn:hover { filter: brightness(1.1); }
 
-  /* --- Empty State --- */
   .empty-state {
     text-align: center;
     color: #6B7280;
     padding: 3rem 0;
-  }
-
-  .view-all-btn {
-    border: 1px solid #ccc;
-    color: #333;
-    background: white;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    margin-top: 1rem;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-
-  .view-all-btn:hover {
-    background: #f3f4f6;
   }
 </style>
