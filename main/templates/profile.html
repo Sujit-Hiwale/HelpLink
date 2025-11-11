@@ -4,16 +4,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile – HelpLink</title>
+    <title>{{ profile_user.user.username }} – HelpLink</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- AOS for animations -->
+    <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <!-- Interactivity Animations -->
     <style>
       .clickable {
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -38,34 +37,54 @@
         class="p-8 mb-8 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-sm">
         <div class="flex flex-col md:flex-row gap-6 items-center md:items-start">
           <div class="flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1558616513-9c9db87e1245?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400"
-              alt="Avatar" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
+            {% if profile_user.avatar %}
+              <img src="{{ profile_user.avatar }}"
+                alt="Avatar"
+                class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover">
+            {% else %}
+              <div
+                class="w-32 h-32 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                {{ profile_user.user.username|slice:":1"|upper }}
+              </div>
+            {% endif %}
           </div>
+
           <div class="flex-1 text-center md:text-left">
-            <h1 class="text-gray-900 text-2xl font-semibold mb-2">Sujit Hiwale</h1>
+            <h1 class="text-gray-900 text-2xl font-semibold mb-2">
+              {{ profile_user.full_name|default:profile_user.user.username }}
+            </h1>
+
             <div class="flex flex-wrap gap-2 justify-center md:justify-start mb-3">
+              {% if profile_user.is_top_helper %}
               <span
                 class="bg-gradient-to-r from-rose-500 to-orange-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
                 ⭐ Top Helper
               </span>
+              {% endif %}
+              {% if profile_user.location %}
               <span class="border border-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full">
-                Downtown District
+                {{ profile_user.location }}
               </span>
+              {% endif %}
             </div>
-            <p class="text-gray-600 mb-3">Passionate about helping my community thrive. Every small act counts!</p>
+
+            {% if profile_user.bio %}
+              <p class="text-gray-600 mb-3">{{ profile_user.bio }}</p>
+            {% endif %}
+
             <div class="flex items-center gap-2 text-sm text-gray-500 justify-center md:justify-start">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span>Joined January 2024</span>
+              <span>Joined {{ profile_user.user.date_joined|date:"F Y" }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Stats -->
+      <!-- Stats Section -->
       <div data-aos="fade-up" data-aos-delay="100" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {% for label, value, color, icon in stats %}
         <div onclick="activateCard(this)" class="clickable p-6 text-center bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition">
@@ -77,6 +96,7 @@
       </div>
 
       <div class="grid lg:grid-cols-2 gap-8">
+
         <!-- Help Categories -->
         <div data-aos="fade-right" class="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
           <h2 class="text-gray-900 text-xl font-semibold mb-6">Help Categories</h2>
@@ -107,13 +127,16 @@
           <h2 class="text-gray-900 text-xl font-semibold mb-6">Recent Activity</h2>
           <div class="space-y-4">
             {% for activity in recent_activity %}
-            <div onclick="alert('Viewing details for {{ activity.person }}')" 
+            <div onclick="window.location.href='{% url 'profile' activity.person_id %}'"
                  class="clickable flex items-start gap-3 pb-4 border-b border-gray-100 last:border-0">
-              <div class="w-10 h-10 bg-gradient-to-br from-rose-500 to-orange-500 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z" />
-                </svg>
+              <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                {% if activity.avatar %}
+                  <img src="{{ activity.avatar }}" class="w-full h-full object-cover">
+                {% else %}
+                  <div class="w-full h-full bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center text-white font-bold">
+                    {{ activity.person|slice:":1"|upper }}
+                  </div>
+                {% endif %}
               </div>
               <div class="flex-1">
                 <p class="text-gray-900">{{ activity.action }}</p>
@@ -169,18 +192,19 @@
           <p>— Ralph Waldo Emerson</p>
         </div>
       </div>
-      <br>
 
+      <br />
+
+      <!-- Logout Button -->
       <div class="flex justify-center mb-6">
-  <form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit"
-      class="bg-gradient-to-r from-rose-500 to-orange-500 text-white px-4 py-2 rounded-full shadow hover:opacity-90 transition">
-      Logout
-    </button>
-  </form>
-</div>
-
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button type="submit"
+            class="bg-gradient-to-r from-rose-500 to-orange-500 text-white px-4 py-2 rounded-full shadow hover:opacity-90 transition">
+            Logout
+          </button>
+        </form>
+      </div>
     </div>
 
     <script>
@@ -197,7 +221,6 @@
 
       function activateAchievement(el) {
         el.classList.toggle('active-card');
-        alert('Achievement details opened!');
       }
     </script>
   </body>

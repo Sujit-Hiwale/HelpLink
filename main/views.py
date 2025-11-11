@@ -76,15 +76,15 @@ def Logout(request):
 
 # -------------------- PROFILE --------------------
 @login_required
-def profile_view(request):
+def profile_view(request, username):
     user = request.user
     profile = getattr(user, 'profile', None)
 
     stats = [
-        ("Requests", user.help_requests.count(), "text-rose-500", "❤️"),
-        ("Completed", user.help_requests.filter(status='Completed').count(), "text-green-500", "✅"),
-        ("Pending", user.help_requests.filter(status='Pending').count(), "text-yellow-500", "⌛"),
-        ("Accepted", user.help_requests.filter(status='Accepted').count(), "text-indigo-500", "⭐"),
+        ("Total Helps", profile.total_helps, "text-rose-500", "❤️"),
+        ("Reputation", profile.reputation_points, "text-orange-500", "🔥"),
+        ("Requests Posted", user_obj.help_requests.count(), "text-purple-500", "📢"),
+        ("Member Since", profile.joined_date.strftime("%b %Y"), "text-green-500", "📅"),
     ]
 
     # category progress
@@ -115,6 +115,7 @@ def profile_view(request):
     ]
 
     return render(request, 'profile.html', {
+        "profile_user": user_obj,
         "profile": profile,
         "stats": stats,
         "category_progress": category_progress,
@@ -199,3 +200,11 @@ def help_view(request, request_id):
 def notifications_view(request):
     notifications = Notification.objects.filter(recipient=request.user)
     return render(request, 'notifications.html', {'notifications': notifications})
+
+def request_detail(request, request_id):
+    help_request = get_object_or_404(HelpRequest, id=request_id)
+    return render(request, "request_detail.html", {"help_request": help_request})
+
+@login_required
+def my_profile_redirect(request):
+    return redirect('profile', username=request.user.username)
