@@ -96,15 +96,27 @@
             {{ form.non_field_errors }}
 
             <div>
-              <label for="id_name" class="block text-sm font-medium text-gray-700">Full Name</label>
-              {{ form.name }}
-              {{ form.name.errors }}
+              <label for="id_username" class="block text-sm font-medium text-gray-700">Username</label>
+              {{ form.username }}
+              {{ form.username.errors }}
             </div>
 
             <div>
               <label for="id_email" class="block text-sm font-medium text-gray-700">Email</label>
               {{ form.email }}
               {{ form.email.errors }}
+            </div>
+
+            <div>
+              <label for="id_phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+              {{ form.phone }}
+              {{ form.phone.errors }}
+            </div>
+
+            <div>
+              <label for="id_location" class="block text-sm font-medium text-gray-700">Location</label>
+              {{ form.location }}
+              {{ form.location.errors }}
             </div>
 
             <div>
@@ -143,7 +155,7 @@
         </p>
 
         <div class="mt-8 text-center">
-          <a href="{% url 'home' %}" class="text-gray-600 hover:text-gray-700 text-sm">← Back to home</a>
+          <a href="{% url 'index' %}" class="text-gray-600 hover:text-gray-700 text-sm">← Back to home</a>
         </div>
       </div>
     </div>

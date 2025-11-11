@@ -6,12 +6,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-class SignupForm(forms.ModelForm):
-    confirm_password = forms.CharField(widget=forms.PasswordInput())
-    phone = forms.CharField(max_length=15, required=False)
-    location = forms.CharField(max_length=100, required=False)
-    avatar = forms.URLField(required=False)
-
+class SignupForm(forms.Form):
+    username = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    phone = forms.CharField(max_length=15)
+    location = forms.CharField(max_length=100)
+    password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'password']

@@ -130,6 +130,18 @@ def profile_view(request, username):
         "achievements": achievements,
     })
 
+def accept_request(request, id):
+    req = get_object_or_404(HelpRequest, id=id)
+    req.status = "Accepted"
+    req.save()
+    # send notification logic here
+    return redirect('requests')
+
+def complete_request(request, id):
+    req = get_object_or_404(HelpRequest, id=id)
+    req.status = "Completed"
+    req.save()
+    return redirect('requests')
 
 # -------------------- MY PROFILE REDIRECT --------------------
 @login_required

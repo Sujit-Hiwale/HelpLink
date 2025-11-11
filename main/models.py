@@ -47,8 +47,8 @@ class HelpRequest(models.Model):
         ('medium', 'Medium'),
         ('high', 'High'),
     ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='help_requests')
+    
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='requests_helped', null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.TextField()
     category = models.CharField(max_length=100, blank=True)
@@ -62,6 +62,8 @@ class HelpRequest(models.Model):
     is_accepted = models.BooleanField(default=False)
     is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='help_requests', null=True, blank=True)
+    contact_info = models.CharField(max_length=255)
 
     def __str__(self):
         return self.title
