@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.urls import reverse
-from .models import HelpRequest, Notification
+from .models import HelpRequest, Notification, UserProfile
 from .forms import SignupForm, LoginForm, HelpRequestForm
-
+from django.utils import timezone
 
 # -------------------- HOME PAGE --------------------
 def index(request):
@@ -77,22 +77,28 @@ def Logout(request):
 # -------------------- PROFILE --------------------
 @login_required
 def profile_view(request, username):
-    user = request.user
-    profile = getattr(user, 'profile', None)
+    # Get the user whose profile is being viewed
+    user_obj = get_object_or_404(User, username=username)
 
+    # Ensure profile exists (auto-create if missing)
+    profile, created = UserProfile.objects.get_or_create(user=user_obj, defaults={
+        "joined_date": timezone.now(),
+    })
+
+    # Build stats
     stats = [
-        ("Total Helps", profile.total_helps, "text-rose-500", "❤️"),
-        ("Reputation", profile.reputation_points, "text-orange-500", "🔥"),
+        ("Total Helps", profile.total_helps or 0, "text-rose-500", "❤️"),
+        ("Reputation", profile.reputation_points or 0, "text-orange-500", "🔥"),
         ("Requests Posted", user_obj.help_requests.count(), "text-purple-500", "📢"),
         ("Member Since", profile.joined_date.strftime("%b %Y"), "text-green-500", "📅"),
     ]
 
-    # category progress
+    # Category progress
     category_progress = []
-    category_qs = user.help_requests.values('category').distinct()
+    category_qs = user_obj.help_requests.values('category').distinct()
     for c in category_qs:
         cat_name = c['category'] or 'General'
-        count = user.help_requests.filter(category=cat_name).count()
+        count = user_obj.help_requests.filter(category=cat_name).count()
         category_progress.append({
             'category': cat_name,
             'count': count,
@@ -101,13 +107,18 @@ def profile_view(request, username):
             'icon': '💪'
         })
 
-    # recent activity
+    # Recent activity
     recent_activity = [
-        {'action': hr.title, 'person': hr.user.username, 'category': hr.category or 'General',
-         'time': hr.date_created.strftime('%b %d %Y')}
-        for hr in user.help_requests.order_by('-date_created')[:5]
+        {
+            'action': hr.title,
+            'person': hr.user.username,
+            'category': hr.category or 'General',
+            'time': hr.date_created.strftime('%b %d %Y')
+        }
+        for hr in user_obj.help_requests.order_by('-date_created')[:5]
     ]
 
+    # Achievements
     achievements = [
         {"name": "First Helper", "description": "Completed your first request", "icon": "🎉", "unlocked": True},
         {"name": "Community Star", "description": "Helped 10 different people", "icon": "⭐", "unlocked": True},

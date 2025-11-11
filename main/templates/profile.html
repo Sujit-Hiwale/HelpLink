@@ -51,7 +51,7 @@
 
           <div class="flex-1 text-center md:text-left">
             <h1 class="text-gray-900 text-2xl font-semibold mb-2">
-              {{ profile_user.full_name|default:profile_user.user.username }}
+              {{ profile_user.get_full_name|default:profile_user.username }}
             </h1>
 
             <div class="flex flex-wrap gap-2 justify-center md:justify-start mb-3">
@@ -127,7 +127,7 @@
           <h2 class="text-gray-900 text-xl font-semibold mb-6">Recent Activity</h2>
           <div class="space-y-4">
             {% for activity in recent_activity %}
-            <div onclick="window.location.href='{% url 'profile' activity.person_id %}'"
+            <div onclick="window.location.href='{% url 'profile' activity.person.username %}'"
                  class="clickable flex items-start gap-3 pb-4 border-b border-gray-100 last:border-0">
               <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                 {% if activity.avatar %}
