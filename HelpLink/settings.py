@@ -85,11 +85,10 @@ WSGI_APPLICATION = "HelpLink.wsgi.application"
 import dj_database_url
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='postgresql://helplink_user:sujit@helplink@localhost:5432/helplink_db')
+    'default': dj_database_url.parse(
+        config('DATABASE_URL')
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -141,4 +140,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
 
