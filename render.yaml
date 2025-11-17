@@ -1,6 +1,8 @@
 services:
   - type: web
-    runtime: python3
-    pythonVersion: 3.12.3
+    name: helplink
+    env: python
+    plan: free
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn HelpLink.wsgi:application"
+    runtime: "python3.12"
