@@ -85,8 +85,14 @@ WSGI_APPLICATION = "HelpLink.wsgi.application"
 import dj_database_url
 
 DATABASES = {
+import dj_database_url
+from decouple import config
+
+DATABASES = {
     'default': dj_database_url.parse(
-        config('DATABASE_URL')
+        config("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 
@@ -140,5 +146,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
 
 
