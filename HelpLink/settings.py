@@ -78,8 +78,8 @@ WSGI_APPLICATION = "HelpLink.wsgi.application"
 
 # Database (Render PostgreSQL)
 DATABASES = {
-    'default': dj_database_url.parse(
-        config('DATABASE_URL')
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL', default='postgresql://helplink_user:sujit%40helplink@dpg-ce12xxxxx-a.oregon-postgres.render.com:5432/helplink_db')
     )
 }
 
@@ -112,5 +112,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
 
 
