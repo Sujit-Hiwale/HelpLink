@@ -51,7 +51,7 @@ class HelpRequest(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='requests_helped', null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.TextField()
-    category = models.CharField(max_length=100, blank=True)
+    category = models.CharField(max_length=100, blank=True, null=True, default="Other")
     location = models.CharField(max_length=100)
     timeAgo = models.CharField(max_length=50, default='Just now')
     urgency = models.CharField(max_length=10, choices=URGENCY_CHOICES)
@@ -63,7 +63,7 @@ class HelpRequest(models.Model):
     is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='help_requests', null=True, blank=True)
-    contact_info = models.CharField(max_length=255)
+    contact_info = models.CharField(max_length=255, blank=True, null=True, default="")
 
     def __str__(self):
         return self.title
